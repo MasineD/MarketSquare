@@ -2,13 +2,14 @@
 import React, { useState, useEffect } from 'react'
 
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(true)
+  const [isLogin, setIsLogin] = useState(true)      // State to toggle between login and signup forms
+  const [isBuyer, setIsBuyer] = useState(true)    // State to toggle between buyer and seller forms
 
   return (
     <div>
         {isLogin ? (
           <div>
-            <h2>Login</h2>
+            <h2>Sign In</h2>
             {/* ---------A card container for the Login form------------ */}
             <div className="loginCard">
             <form>
@@ -20,17 +21,93 @@ const Auth = () => {
                     <label htmlFor="password">Password</label>
                     <input type="password" id="password" placeholder="password" />
                 </div>
-                <button type="submit">Login</button>
+                <button type="submit">Sign In</button>
             </form>
             <p>Don't have an account? <button onClick={() => setIsLogin(false)}>Sign up</button></p>
           </div>
           </div>
         ) : (
           <div>
-            <h2>Signup</h2>
-            {/* Signup form */}
-          </div>
-        )}
+            <h2>Sign Up</h2>
+            {/* -------radio buttons for selecting buyer or seller */}
+            <div>
+              <label>
+                <input type="radio" name="userType" checked={isBuyer} onChange={() => setIsBuyer(true)} />
+                Buyer
+              </label>
+              <label>
+                <input type="radio" name="userType" checked={!isBuyer} onChange={() => setIsBuyer(false)} />
+                Seller
+              </label>
+            </div>
+            {/* ---------A card container for the Signup form------------ */}
+            {isBuyer ? (
+              <div className="signupCard">
+                <form>
+                  <div>
+                    <label htmlFor="fullname">Fullname</label>
+                    <input type="text" id="fullname" placeholder="fullname" />
+                </div>
+                <div>
+                  <label htmlFor="signup-email">Email</label>
+                  <input type="email" id="signup-email" placeholder="email" />
+                </div>
+                <div>
+                  <label htmlFor="phone">Phone</label>
+                  <input type="text" id="phone" placeholder="phone" />
+                </div>
+                <div>
+                  <label htmlFor="signup-password">Password</label>
+                  <input type="password" id="signup-password" placeholder="password" />
+                </div>
+                <div>
+                  <label htmlFor="confirm-password">ConfirmPassword</label>
+                  <input type="password" id="confirm-password" placeholder="confirmpassword" />
+                </div>
+                <button type="submit">Sign Up</button>
+              </form>
+              <p>Already have an account? <button onClick={() => setIsLogin(true)}>Sign In</button></p>
+            </div>) : (
+              <div className="signupCard">
+                <form>
+                    <div>
+                      <label htmlFor="fullname">Fullname</label>
+                      <input type="text" id="fullname" placeholder="fullname" />
+                    </div>
+                    <div>
+                      <label htmlFor="company-name">Company Name</label>
+                      <input type="text" id="company-name" placeholder="company name" />
+                    </div>
+                    <div>
+                      <label htmlFor="primary-service">Primary Service</label>
+                      <input type="text" id="primary-service" placeholder="primary service/ product" />
+                    </div>
+                    <div>
+                      <label htmlFor="registration-number">Registration Number</label>
+                      <input type="text" id="registration-number" placeholder="registration number" />
+                    </div>
+                    <div>
+                      <label htmlFor="signup-email">Email</label>
+                      <input type="email" id="signup-email" placeholder="email" />
+                    </div>
+                    <div>
+                      <label htmlFor="phone">Phone</label>
+                      <input type="text" id="phone" placeholder="phone" />
+                    </div>
+                    <div>
+                      <label htmlFor="signup-password">Password</label>
+                      <input type="password" id="signup-password" placeholder="password" />
+                    </div>
+                    <div>
+                      <label htmlFor="confirm-password">ConfirmPassword</label>
+                      <input type="password" id="confirm-password" placeholder="confirmpassword" />
+                    </div>
+                    <button type="submit">Sign Up</button>
+                  </form>
+                  <p>Already have an account? <button onClick={() => setIsLogin(true)}>Sign In</button></p>
+                </div>)}
+              </div>)
+            }
     </div>
   )
 }
