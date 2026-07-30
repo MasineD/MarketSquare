@@ -15,11 +15,11 @@ const Auth = () => {
             <form>
                 <div>
                     <label htmlFor="username">Username</label>
-                    <input type="text" id="username" placeholder="username" />
+                    <input type="text" id="username" placeholder="username" required />
                 </div>
                 <div>
                     <label htmlFor="password">Password</label>
-                    <input type="password" id="password" placeholder="password" />
+                    <input type="password" id="password" placeholder="password" required />
                 </div>
                 <button type="submit">Sign In</button>
             </form>
@@ -46,7 +46,7 @@ const Auth = () => {
                 <form>
                   <div>
                     <label htmlFor="fullname">Fullname</label>
-                    <input type="text" id="fullname" placeholder="fullname" />
+                    <input type="text" id="fullname" placeholder="fullname" required />
                 </div>
                 <div>
                   <label htmlFor="signup-email">Email</label>
@@ -54,15 +54,15 @@ const Auth = () => {
                 </div>
                 <div>
                   <label htmlFor="phone">Phone</label>
-                  <input type="text" id="phone" placeholder="phone" />
+                  <input type="text" id="phone" placeholder="phone" required />
                 </div>
                 <div>
                   <label htmlFor="signup-password">Password</label>
-                  <input type="password" id="signup-password" placeholder="password" />
+                  <input type="password" id="signup-password" placeholder="password" required/>
                 </div>
                 <div>
                   <label htmlFor="confirm-password">ConfirmPassword</label>
-                  <input type="password" id="confirm-password" placeholder="confirmpassword" />
+                  <input type="password" id="confirm-password" placeholder="confirmpassword" required/>
                 </div>
                 <button type="submit">Sign Up</button>
               </form>
@@ -72,15 +72,15 @@ const Auth = () => {
                 <form>
                     <div>
                       <label htmlFor="fullname">Fullname</label>
-                      <input type="text" id="fullname" placeholder="fullname" />
+                      <input type="text" id="fullname" placeholder="fullname" required />
                     </div>
                     <div>
                       <label htmlFor="company-name">Company Name</label>
-                      <input type="text" id="company-name" placeholder="company name" />
+                      <input type="text" id="company-name" placeholder="company name" required />
                     </div>
                     <div>
                       <label htmlFor="primary-service">Primary Service</label>
-                      <input type="text" id="primary-service" placeholder="primary service/ product" />
+                      <input type="text" id="primary-service" placeholder="primary service/ product" required />
                     </div>
                     <div>
                       <label htmlFor="registration-number">Registration Number</label>
@@ -88,19 +88,19 @@ const Auth = () => {
                     </div>
                     <div>
                       <label htmlFor="signup-email">Email</label>
-                      <input type="email" id="signup-email" placeholder="email" />
+                      <input type="email" id="signup-email" placeholder="email" required />
                     </div>
                     <div>
                       <label htmlFor="phone">Phone</label>
-                      <input type="text" id="phone" placeholder="phone" />
+                      <input type="text" id="phone" placeholder="phone" required />
                     </div>
                     <div>
                       <label htmlFor="signup-password">Password</label>
-                      <input type="password" id="signup-password" placeholder="password" />
+                      <input type="password" id="signup-password" placeholder="password" required/>
                     </div>
                     <div>
                       <label htmlFor="confirm-password">ConfirmPassword</label>
-                      <input type="password" id="confirm-password" placeholder="confirmpassword" />
+                      <input type="password" id="confirm-password" placeholder="confirmpassword" required/>
                     </div>
                     <button type="submit">Sign Up</button>
                   </form>
