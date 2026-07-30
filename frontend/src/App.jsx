@@ -6,7 +6,7 @@ import Auth from './pages/authentication/auth'
 const App = () => {
   return (
     <div>
-      MarketSquare
+      <h1 className="text-3xl font-[var(--secondary-font-family)] font-bold italic">MarketSquare</h1>
       <Router>
         <Routes>
           <Route path="/profile" element={<Profile />} />

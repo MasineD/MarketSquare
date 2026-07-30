@@ -1,5 +1,6 @@
 // ============= Reusable authentication component =============
 import React, { useState, useEffect } from 'react'
+import '../../index.css'
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true)      // State to toggle between login and signup forms
@@ -8,7 +9,7 @@ const Auth = () => {
   return (
     <div>
         {isLogin ? (
-          <div>
+          <div className="authContainer">
             <h2>Sign In</h2>
             {/* ---------A card container for the Login form------------ */}
             <div className="loginCard">
@@ -27,7 +28,7 @@ const Auth = () => {
           </div>
           </div>
         ) : (
-          <div>
+          <div className="authContainer">
             <h2>Sign Up</h2>
             {/* -------radio buttons for selecting buyer or seller */}
             <div>

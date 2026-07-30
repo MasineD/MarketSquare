@@ -1,1 +1,23 @@
 @import "tailwindcss";
+
+:root {   
+    /* Define CSS variables for colors */
+    --primary-color: rgba(127, 255, 212, 1);
+    --secondary-color: rgba(153, 255, 255, 1);
+    --accent-color1: rgba(0, 255, 255, 1);
+    --accent-color2: rgba(255, 69, 0, 1);
+    --light-background: rgba(245, 245, 245, 1);
+    --dark-background: rgba(0, 0, 0, 0.8);
+    --text-color1: rgba(255, 255, 255, 0.2);
+    --text-color2: rgba(255, 255, 255, 0.8);
+    /* Define CSS variables for fonts */
+    --primary-font-family: 'sans-serif';
+    --secondary-font-family: 'Cooper', sans-serif;
+    --font-size-small: 14px;
+    --font-size-medium: 16px;
+    --font-size-large: 18px;
+}
+
+.authContainer{
+    @apply flex flex-col items-center justify-center min-h-screen;
+}
