@@ -7,6 +7,7 @@ import '../../index.css'
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true)      // State to toggle between login and signup forms
   const [isBuyer, setIsBuyer] = useState(true)    // State to toggle between buyer and seller forms
+  const [isForgotPassword, setIsForgotPassword] = useState(false) // State to toggle forgot password form
 
   return (
     <div className="relative min-h-screen bg-slate-50 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -31,23 +32,21 @@ const Auth = () => {
             </p>
             <form className="grid grid-cols-[90px_1fr] gap-y-4 gap-x-3 items-center">
               <label htmlFor="username" className="text-slate-800 font-bold text-left text-sm md:text-base">Username:</label>
-              <input
-                type="text"
-                id="username"
-                placeholder="username"
-                required
+              <input type="text" id="username" placeholder="username" required
                 className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
               />
 
               <label htmlFor="password" className="text-slate-800 font-bold text-left text-sm md:text-base">Password:</label>
-              <input
-                type="password"
-                id="password"
-                placeholder="password"
-                required
+              <input type="password" id="password" placeholder="password" required
                 className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
               />
 
+              {/* Forgot password link */}
+              <div className="col-span-2 text-left">
+                <button onClick={() => setIsForgotPassword(true)} className="text-xs md:text-sm text-slate-500 hover:text-black transition-colors font-semibold cursor-pointer">
+                  Forgot password?
+                </button>
+              </div>
               {/* Social buttons spanning full width of card */}
                 <div className="col-span-2 flex gap-2 w-full mt-2">
                   <button
