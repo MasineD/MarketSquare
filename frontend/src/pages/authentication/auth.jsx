@@ -26,6 +26,9 @@ const Auth = () => {
 
           {/* ---------A card container for the Login form------------ */}
           <div className="bg-white border border-slate-800 rounded-[32px] p-8 md:p-10 w-full shadow-sm">
+            <p className="text-center text-slate-800 font-bold mb-6 text-sm">
+              Welcome back to <span className="font-extrabold">MarketSquare</span>!
+            </p>
             <form className="grid grid-cols-[90px_1fr] gap-y-4 gap-x-3 items-center">
               <label htmlFor="username" className="text-slate-800 font-bold text-left text-sm md:text-base">Username:</label>
               <input
@@ -44,6 +47,22 @@ const Auth = () => {
                 required
                 className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
               />
+
+              {/* Social buttons spanning full width of card */}
+                <div className="col-span-2 flex gap-2 w-full mt-2">
+                  <button
+                    type="button"
+                    className="flex-1 py-1.5 px-1 border border-slate-800 rounded-md text-[10px] md:text-xs font-bold text-slate-800 hover:bg-slate-50 transition-colors text-center cursor-pointer whitespace-nowrap"
+                  >
+                    Continue with Google
+                  </button>
+                  <button
+                    type="button"
+                    className="flex-1 py-1.5 px-1 border border-slate-800 rounded-md text-[10px] md:text-xs font-bold text-slate-800 hover:bg-slate-50 transition-colors text-center cursor-pointer whitespace-nowrap"
+                  >
+                    Continue with Facebook
+                  </button>
+                </div>
 
               {/* Sign In button spanning full width of form */}
               <div className="col-span-2 w-full mt-2">
@@ -251,22 +270,6 @@ const Auth = () => {
                   required
                   className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
                 />
-
-                {/* Social buttons spanning full width of card */}
-                <div className="col-span-2 flex gap-2 w-full mt-2">
-                  <button
-                    type="button"
-                    className="flex-1 py-1.5 px-1 border border-slate-800 rounded-md text-[10px] md:text-xs font-bold text-slate-800 hover:bg-slate-50 transition-colors text-center cursor-pointer whitespace-nowrap"
-                  >
-                    Continue with Google
-                  </button>
-                  <button
-                    type="button"
-                    className="flex-1 py-1.5 px-1 border border-slate-800 rounded-md text-[10px] md:text-xs font-bold text-slate-800 hover:bg-slate-50 transition-colors text-center cursor-pointer whitespace-nowrap"
-                  >
-                    Continue with Facebook
-                  </button>
-                </div>
 
                 {/* Submit button spanning full width of card */}
                 <div className="col-span-2 w-full mt-2">
