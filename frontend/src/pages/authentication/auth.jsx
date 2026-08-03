@@ -8,6 +8,7 @@ const Auth = () => {
   const [isLogin, setIsLogin] = useState(true)      // State to toggle between login and signup forms
   const [isBuyer, setIsBuyer] = useState(true)    // State to toggle between buyer and seller forms
   const [isForgotPassword, setIsForgotPassword] = useState(false) // State to toggle forgot password form
+  const [isSendEmail, setIsSendEmail] = useState(true) // State to toggle between sending email or SMS 
 
   return (
     <div className="relative min-h-screen bg-slate-50 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -296,9 +297,73 @@ const Auth = () => {
           </div>
         </div>
       )}
+      {/* Forgot Password Form */}
+      {isForgotPassword && (
+        <div className="absolute inset-0 bg-slate-50 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+          {/* Home Icon Link - now inside the forgot password overlay */}
+          <Link to="/" className="absolute top-6 left-6 text-cyan-500 hover:text-cyan-600 transition-colors p-2 rounded-full hover:bg-slate-200">
+            <Home className="w-8 h-8" />
+          </Link>
+          <div className="flex flex-col items-center w-full max-w-md">
+            {/* Forgot Password Header */}
+            <div className="flex flex-col items-center mb-6">
+              <h2 className="text-3xl font-extrabold text-slate-800 border-b-4 border-slate-800 pb-2 px-4 tracking-wide">
+                Forgot Password
+              </h2>
+            </div>
+          </div>
+          <div className="bg-white border border-slate-800 rounded-[32px] p-8 md:p-10 w-full max-w-md shadow-sm">
+            <p className="text-slate-600 text-center mb-6">
+              Enter your {isSendEmail ? 'email address' : 'phone number'} and we'll send you a One-Time Pin to reset your password.
+            </p>
+            <form className="space-y-4">
+              {/* Radio Buttons to choose between whether to send OTP via email or phone */}
+              <div className="flex justify-center items-center gap-8 mb-6">
+                <label className="flex items-center gap-2 text-slate-800 font-bold cursor-pointer select-none">
+                  <input type="radio" name="OTPMethod" checked={isSendEmail} onChange={() => setIsSendEmail(true)}
+                    className="appearance-none w-4 h-4 rounded-full border-2 border-slate-400 checked:border-slate-800 checked:bg-slate-800 transition-all cursor-pointer relative checked:after:content-[''] checked:after:absolute checked:after:w-1.5 checked:after:h-1.5 checked:after:bg-white checked:after:rounded-full checked:after:top-1/2 checked:after:left-1/2 checked:after:-translate-x-1/2 checked:after:-translate-y-1/2"
+                  />
+                  Email
+                </label>
+                <label className="flex items-center gap-2 text-slate-800 font-bold cursor-pointer select-none">
+                  <input type="radio" name="OTPMethod" checked={!isSendEmail} onChange={() => setIsSendEmail(false)}
+                    className="appearance-none w-4 h-4 rounded-full border-2 border-slate-400 checked:border-slate-800 checked:bg-slate-800 transition-all cursor-pointer relative checked:after:content-[''] checked:after:absolute checked:after:w-1.5 checked:after:h-1.5 checked:after:bg-white checked:after:rounded-full checked:after:top-1/2 checked:after:left-1/2 checked:after:-translate-x-1/2 checked:after:-translate-y-1/2"
+                  />
+                  SMS
+                </label>
+              </div>
+              
+              <div>
+                <label htmlFor="username" className="text-slate-800 font-medium text-left text-sm md:text-base">Username:</label>
+                <input type="text" id="username" placeholder="username" required
+                  className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="forgot-email" className="block text-sm font-medium text-slate-700">
+                  {isSendEmail ? 'Email Address' : 'Phone Number'}
+                </label>
+                <input
+                  type={isSendEmail ? "email" : "tel"}
+                  id="forgot-email"
+                  placeholder={isSendEmail ? "email@example.com" : "phone number"}
+                  required
+                  className="mt-1 block w-full px-3 py-2 border border-slate-800 rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full py-2.5 px-4 bg-[#00d8ff] hover:bg-[#00c5eb] text-white font-bold rounded-lg transition-colors cursor-pointer text-center text-sm tracking-wider"
+              >
+                Send One-Time Pin
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
 
 export default Auth
-
