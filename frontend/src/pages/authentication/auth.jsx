@@ -1,5 +1,7 @@
 // ============= Reusable authentication component =============
-import React, { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Home } from 'lucide-react'
 import '../../index.css'
 
 const Auth = () => {
@@ -7,110 +9,294 @@ const Auth = () => {
   const [isBuyer, setIsBuyer] = useState(true)    // State to toggle between buyer and seller forms
 
   return (
-    <div>
-        {isLogin ? (
-          <div className="authContainer">
-            <h2>Sign In</h2>
-            {/* ---------A card container for the Login form------------ */}
-            <div className="loginCard">
-            <form>
-                <div>
-                    <label htmlFor="username">Username</label>
-                    <input type="text" id="username" placeholder="username" required />
-                </div>
-                <div>
-                    <label htmlFor="password">Password</label>
-                    <input type="password" id="password" placeholder="password" required />
-                </div>
-                <button type="submit">Sign In</button>
+    <div className="relative min-h-screen bg-slate-50 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      {/* Home Icon Link */}
+      <Link to="/" className="absolute top-6 left-6 text-cyan-500 hover:text-cyan-600 transition-colors p-2 rounded-full hover:bg-slate-200">
+        <Home className="w-8 h-8" />
+      </Link>
+
+      {isLogin ? (
+        <div className="flex flex-col items-center w-full max-w-md">
+          {/* Sign In Header */}
+          <div className="flex flex-col items-center mb-6">
+            <h2 className="text-3xl font-extrabold text-slate-800 border-b-4 border-slate-800 pb-2 px-4 tracking-wide">
+              Sign In
+            </h2>
+          </div>
+
+          {/* ---------A card container for the Login form------------ */}
+          <div className="bg-white border border-slate-800 rounded-[32px] p-8 md:p-10 w-full shadow-sm">
+            <form className="grid grid-cols-[90px_1fr] gap-y-4 gap-x-3 items-center">
+              <label htmlFor="username" className="text-slate-800 font-bold text-left text-sm md:text-base">Username:</label>
+              <input
+                type="text"
+                id="username"
+                placeholder="username"
+                required
+                className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
+              />
+
+              <label htmlFor="password" className="text-slate-800 font-bold text-left text-sm md:text-base">Password:</label>
+              <input
+                type="password"
+                id="password"
+                placeholder="password"
+                required
+                className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
+              />
+
+              {/* Sign In button aligned in the second column */}
+              <div className="col-start-2 w-full mt-2">
+                <button
+                  type="submit"
+                  className="w-full py-2.5 px-4 bg-[#00d8ff] hover:bg-[#00c5eb] text-white font-bold rounded-lg transition-colors cursor-pointer text-center text-sm tracking-wider"
+                >
+                  Sign In
+                </button>
+              </div>
+
+              {/* Footer to switch to Sign Up */}
+              <p className="col-span-2 text-center text-sm text-slate-800 mt-4 font-semibold">
+                Don't have an account?{' '}
+                <button
+                  type="button"
+                  onClick={() => setIsLogin(false)}
+                  className="text-cyan-500 hover:text-cyan-600 font-bold underline cursor-pointer"
+                >
+                  Sign up
+                </button>
+              </p>
             </form>
-            <p>Don't have an account? <button onClick={() => setIsLogin(false)}>Sign up</button></p>
           </div>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center w-full max-w-md">
+          {/* Sign Up Header */}
+          <div className="flex flex-col items-center mb-6">
+            <h2 className="text-3xl font-extrabold text-slate-800 border-b-4 border-slate-800 pb-2 px-4 tracking-wide">
+              Sign Up
+            </h2>
           </div>
-        ) : (
-          <div className="authContainer">
-            <h2>Sign Up</h2>
-            {/* -------radio buttons for selecting buyer or seller */}
-            <div>
-              <label>
-                <input type="radio" name="userType" checked={isBuyer} onChange={() => setIsBuyer(true)} />
-                Buyer
-              </label>
-              <label>
-                <input type="radio" name="userType" checked={!isBuyer} onChange={() => setIsBuyer(false)} />
-                Seller
-              </label>
-            </div>
-            {/* ---------A card container for the Signup form------------ */}
+
+          {/* -------radio buttons for selecting buyer or seller */}
+          <div className="flex justify-center items-center gap-8 mb-6">
+            <label className="flex items-center gap-2 text-slate-800 font-bold cursor-pointer select-none">
+              <input
+                type="radio"
+                name="userType"
+                checked={isBuyer}
+                onChange={() => setIsBuyer(true)}
+                className="appearance-none w-4 h-4 rounded-full border-2 border-slate-400 checked:border-slate-800 checked:bg-slate-800 transition-all cursor-pointer relative checked:after:content-[''] checked:after:absolute checked:after:w-1.5 checked:after:h-1.5 checked:after:bg-white checked:after:rounded-full checked:after:top-1/2 checked:after:left-1/2 checked:after:-translate-x-1/2 checked:after:-translate-y-1/2"
+              />
+              Buyer
+            </label>
+            <label className="flex items-center gap-2 text-slate-800 font-bold cursor-pointer select-none">
+              <input
+                type="radio"
+                name="userType"
+                checked={!isBuyer}
+                onChange={() => setIsBuyer(false)}
+                className="appearance-none w-4 h-4 rounded-full border-2 border-slate-400 checked:border-slate-800 checked:bg-slate-800 transition-all cursor-pointer relative checked:after:content-[''] checked:after:absolute checked:after:w-1.5 checked:after:h-1.5 checked:after:bg-white checked:after:rounded-full checked:after:top-1/2 checked:after:left-1/2 checked:after:-translate-x-1/2 checked:after:-translate-y-1/2"
+              />
+              Seller
+            </label>
+          </div>
+
+          {/* ---------A card container for the Signup form------------ */}
+          <div className="bg-white border border-slate-800 rounded-[32px] p-8 md:p-10 w-full shadow-sm">
+            <p className="text-center text-slate-800 font-bold mb-6 text-sm">
+              {isBuyer ? (
+                <>Buy from over <span className="text-[#00d8ff] font-extrabold">200K</span> sellers</>
+              ) : (
+                <>Sell to over <span className="text-[#00d8ff] font-extrabold">200K</span> buyers</>
+              )}
+            </p>
+
             {isBuyer ? (
-              <div className="signupCard">
-                <form>
-                  <div>
-                    <label htmlFor="fullname">Fullname</label>
-                    <input type="text" id="fullname" placeholder="fullname" required />
+              <form className="grid grid-cols-[90px_1fr] gap-y-4 gap-x-2 items-center">
+                <label htmlFor="fullname" className="text-slate-800 font-bold text-left text-sm md:text-base">Fullname:</label>
+                <input
+                  type="text"
+                  id="fullname"
+                  placeholder="fullname"
+                  required
+                  className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
+                />
+
+                <label htmlFor="signup-email" className="text-slate-800 font-bold text-left text-sm md:text-base">Email:</label>
+                <input
+                  type="email"
+                  id="signup-email"
+                  placeholder="email"
+                  required
+                  className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
+                />
+
+                <label htmlFor="phone" className="text-slate-800 font-bold text-left text-sm md:text-base">Phone:</label>
+                <input
+                  type="text"
+                  id="phone"
+                  placeholder="phone"
+                  required
+                  className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
+                />
+
+                <label htmlFor="signup-password" className="text-slate-800 font-bold text-left text-sm md:text-base">Password:</label>
+                <input
+                  type="password"
+                  id="signup-password"
+                  placeholder="password"
+                  required
+                  className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
+                />
+
+                {/* Social buttons aligned in the second column */}
+                <div className="col-start-2 flex gap-2 w-full mt-2">
+                  <button
+                    type="button"
+                    className="flex-1 py-1.5 px-1 border border-slate-800 rounded-md text-[10px] md:text-xs font-bold text-slate-800 hover:bg-slate-50 transition-colors text-center cursor-pointer whitespace-nowrap"
+                  >
+                    Continue with Google
+                  </button>
+                  <button
+                    type="button"
+                    className="flex-1 py-1.5 px-1 border border-slate-800 rounded-md text-[10px] md:text-xs font-bold text-slate-800 hover:bg-slate-50 transition-colors text-center cursor-pointer whitespace-nowrap"
+                  >
+                    Continue with Facebook
+                  </button>
                 </div>
-                <div>
-                  <label htmlFor="signup-email">Email</label>
-                  <input type="email" id="signup-email" placeholder="email" />
+
+                {/* Submit button aligned in the second column */}
+                <div className="col-start-2 w-full mt-2">
+                  <button
+                    type="submit"
+                    className="w-full py-2.5 px-4 bg-[#00d8ff] hover:bg-[#00c5eb] text-white font-bold rounded-lg transition-colors cursor-pointer text-center text-sm tracking-wider"
+                  >
+                    Sign Up
+                  </button>
                 </div>
-                <div>
-                  <label htmlFor="phone">Phone</label>
-                  <input type="text" id="phone" placeholder="phone" required />
-                </div>
-                <div>
-                  <label htmlFor="signup-password">Password</label>
-                  <input type="password" id="signup-password" placeholder="password" required/>
-                </div>
-                <div>
-                  <label htmlFor="confirm-password">ConfirmPassword</label>
-                  <input type="password" id="confirm-password" placeholder="confirmpassword" required/>
-                </div>
-                <button type="submit">Sign Up</button>
+
+                {/* Footer link to switch to Sign In */}
+                <p className="col-span-2 text-center text-sm text-slate-800 mt-4 font-semibold">
+                  Already have account?{' '}
+                  <button
+                    type="button"
+                    onClick={() => setIsLogin(true)}
+                    className="text-cyan-500 hover:text-cyan-600 font-bold underline cursor-pointer"
+                  >
+                    Sign In
+                  </button>
+                </p>
               </form>
-              <p>Already have an account? <button onClick={() => setIsLogin(true)}>Sign In</button></p>
-            </div>) : (
-              <div className="signupCard">
-                <form>
-                    <div>
-                      <label htmlFor="fullname">Fullname</label>
-                      <input type="text" id="fullname" placeholder="fullname" required />
-                    </div>
-                    <div>
-                      <label htmlFor="company-name">Company Name</label>
-                      <input type="text" id="company-name" placeholder="company name" required />
-                    </div>
-                    <div>
-                      <label htmlFor="primary-service">Primary Service</label>
-                      <input type="text" id="primary-service" placeholder="primary service/ product" required />
-                    </div>
-                    <div>
-                      <label htmlFor="registration-number">Registration Number</label>
-                      <input type="text" id="registration-number" placeholder="registration number" />
-                    </div>
-                    <div>
-                      <label htmlFor="signup-email">Email</label>
-                      <input type="email" id="signup-email" placeholder="email" required />
-                    </div>
-                    <div>
-                      <label htmlFor="phone">Phone</label>
-                      <input type="text" id="phone" placeholder="phone" required />
-                    </div>
-                    <div>
-                      <label htmlFor="signup-password">Password</label>
-                      <input type="password" id="signup-password" placeholder="password" required/>
-                    </div>
-                    <div>
-                      <label htmlFor="confirm-password">ConfirmPassword</label>
-                      <input type="password" id="confirm-password" placeholder="confirmpassword" required/>
-                    </div>
-                    <button type="submit">Sign Up</button>
-                  </form>
-                  <p>Already have an account? <button onClick={() => setIsLogin(true)}>Sign In</button></p>
-                </div>)}
-              </div>)
-            }
+            ) : (
+              <form className="grid grid-cols-[145px_1fr] gap-y-4 gap-x-2 items-center">
+                <label htmlFor="fullname" className="text-slate-800 font-bold text-left text-sm md:text-base">Fullname:</label>
+                <input
+                  type="text"
+                  id="fullname"
+                  placeholder="fullname"
+                  required
+                  className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
+                />
+
+                <label htmlFor="company-name" className="text-slate-800 font-bold text-left text-sm md:text-base">Company Name:</label>
+                <input
+                  type="text"
+                  id="company-name"
+                  placeholder="company name"
+                  required
+                  className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
+                />
+
+                <label htmlFor="primary-service" className="text-slate-800 font-bold text-left text-sm md:text-base">Primary Service:</label>
+                <input
+                  type="text"
+                  id="primary-service"
+                  placeholder="primary service"
+                  required
+                  className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
+                />
+
+                <label htmlFor="registration-number" className="text-slate-800 font-bold text-left text-sm md:text-base">Reg. Number:</label>
+                <input
+                  type="text"
+                  id="registration-number"
+                  placeholder="registration number"
+                  className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
+                />
+
+                <label htmlFor="signup-email" className="text-slate-800 font-bold text-left text-sm md:text-base">Email:</label>
+                <input
+                  type="email"
+                  id="signup-email"
+                  placeholder="email"
+                  required
+                  className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
+                />
+
+                <label htmlFor="phone" className="text-slate-800 font-bold text-left text-sm md:text-base">Phone:</label>
+                <input
+                  type="text"
+                  id="phone"
+                  placeholder="phone"
+                  required
+                  className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
+                />
+
+                <label htmlFor="signup-password" className="text-slate-800 font-bold text-left text-sm md:text-base">Password:</label>
+                <input
+                  type="password"
+                  id="signup-password"
+                  placeholder="password"
+                  required
+                  className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
+                />
+
+                {/* Social buttons aligned in the second column */}
+                <div className="col-start-2 flex gap-2 w-full mt-2">
+                  <button
+                    type="button"
+                    className="flex-1 py-1.5 px-1 border border-slate-800 rounded-md text-[10px] md:text-xs font-bold text-slate-800 hover:bg-slate-50 transition-colors text-center cursor-pointer whitespace-nowrap"
+                  >
+                    Continue with Google
+                  </button>
+                  <button
+                    type="button"
+                    className="flex-1 py-1.5 px-1 border border-slate-800 rounded-md text-[10px] md:text-xs font-bold text-slate-800 hover:bg-slate-50 transition-colors text-center cursor-pointer whitespace-nowrap"
+                  >
+                    Continue with Facebook
+                  </button>
+                </div>
+
+                {/* Submit button aligned in the second column */}
+                <div className="col-start-2 w-full mt-2">
+                  <button
+                    type="submit"
+                    className="w-full py-2.5 px-4 bg-[#00d8ff] hover:bg-[#00c5eb] text-white font-bold rounded-lg transition-colors cursor-pointer text-center text-sm tracking-wider"
+                  >
+                    Sign Up
+                  </button>
+                </div>
+
+                {/* Footer link to switch to Sign In */}
+                <p className="col-span-2 text-center text-sm text-slate-800 mt-4 font-semibold">
+                  Already have account?{' '}
+                  <button
+                    type="button"
+                    onClick={() => setIsLogin(true)}
+                    className="text-cyan-500 hover:text-cyan-600 font-bold underline cursor-pointer"
+                  >
+                    Sign In
+                  </button>
+                </p>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
 
-export default Auth;
+export default Auth
+
