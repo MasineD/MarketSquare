@@ -45,8 +45,8 @@ const Auth = () => {
                 className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
               />
 
-              {/* Sign In button aligned in the second column */}
-              <div className="col-start-2 w-full mt-2">
+              {/* Sign In button spanning full width of form */}
+              <div className="col-span-2 w-full mt-2">
                 <button
                   type="submit"
                   className="w-full py-2.5 px-4 bg-[#00d8ff] hover:bg-[#00c5eb] text-white font-bold rounded-lg transition-colors cursor-pointer text-center text-sm tracking-wider"
@@ -150,8 +150,8 @@ const Auth = () => {
                   className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
                 />
 
-                {/* Social buttons aligned in the second column */}
-                <div className="col-start-2 flex gap-2 w-full mt-2">
+                {/* Social buttons spanning full width of card */}
+                <div className="col-span-2 flex gap-2 w-full mt-2">
                   <button
                     type="button"
                     className="flex-1 py-1.5 px-1 border border-slate-800 rounded-md text-[10px] md:text-xs font-bold text-slate-800 hover:bg-slate-50 transition-colors text-center cursor-pointer whitespace-nowrap"
@@ -166,8 +166,8 @@ const Auth = () => {
                   </button>
                 </div>
 
-                {/* Submit button aligned in the second column */}
-                <div className="col-start-2 w-full mt-2">
+                {/* Submit button spanning full width of card */}
+                <div className="col-span-2 w-full mt-2">
                   <button
                     type="submit"
                     className="w-full py-2.5 px-4 bg-[#00d8ff] hover:bg-[#00c5eb] text-white font-bold rounded-lg transition-colors cursor-pointer text-center text-sm tracking-wider"
@@ -252,8 +252,8 @@ const Auth = () => {
                   className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
                 />
 
-                {/* Social buttons aligned in the second column */}
-                <div className="col-start-2 flex gap-2 w-full mt-2">
+                {/* Social buttons spanning full width of card */}
+                <div className="col-span-2 flex gap-2 w-full mt-2">
                   <button
                     type="button"
                     className="flex-1 py-1.5 px-1 border border-slate-800 rounded-md text-[10px] md:text-xs font-bold text-slate-800 hover:bg-slate-50 transition-colors text-center cursor-pointer whitespace-nowrap"
@@ -268,8 +268,8 @@ const Auth = () => {
                   </button>
                 </div>
 
-                {/* Submit button aligned in the second column */}
-                <div className="col-start-2 w-full mt-2">
+                {/* Submit button spanning full width of card */}
+                <div className="col-span-2 w-full mt-2">
                   <button
                     type="submit"
                     className="w-full py-2.5 px-4 bg-[#00d8ff] hover:bg-[#00c5eb] text-white font-bold rounded-lg transition-colors cursor-pointer text-center text-sm tracking-wider"
