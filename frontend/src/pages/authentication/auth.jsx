@@ -10,6 +10,7 @@ const Auth = () => {
   const [isForgotPassword, setIsForgotPassword] = useState(false) // State to toggle forgot password form
   const [isSendEmail, setIsSendEmail] = useState(true) // State to toggle between sending email or SMS
   const [isOTPSent, setIsOTPSent] = useState(false) // State to track if OTP has been sent
+  const [isOTPVerified, setIsOTPVerified] = useState(false) // State to track if OTP has been verified
 
   // TODO: Add form submission handlers and validation logic for login, signup, and forgot password forms
 
@@ -338,7 +339,7 @@ const Auth = () => {
 
               <div>
                 <label htmlFor="username" className="text-slate-800 font-medium text-left text-sm md:text-base">Username:</label>
-                <input type="text" id="username" placeholder="username" required
+                <input type="text" id="username" placeholder="username" required disabled={isOTPSent}
                   className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
                 />
               </div>
@@ -347,26 +348,40 @@ const Auth = () => {
                 <label htmlFor="forgot-email" className="block text-sm font-medium text-slate-700">
                   {isSendEmail ? 'Email Address' : 'Phone Number'}
                 </label>
-                <input
-                  type={isSendEmail ? "email" : "tel"}
-                  id="forgot-email"
-                  placeholder={isSendEmail ? "email@example.com" : "phone number"}
-                  required
+                <input type={isSendEmail ? "email" : "tel"} id="forgot-email" placeholder={isSendEmail ? "email@example.com" : "phone number"} required disabled={isOTPSent}
                   className="mt-1 block w-full px-3 py-2 border border-slate-800 rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
                 />
               </div>
+
+              {/* A verify OTP field, which is visible only after the OTP is sent */}
+              {isOTPSent && (
+                <div>
+                  <label htmlFor="otp" className="block text-sm font-medium text-slate-700">
+                    One-Time Pin
+                  </label>
+                  <input type="text" id="otp" placeholder="123456" required
+                    className="mt-1 block w-full px-3 py-2 border border-slate-800 rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                  />
+                </div>
+              )}
+
               <button
-                type="submit" onClick={() => setIsOTPSent(true)}
+                type="submit" onClick={(e) => {
+                  if (isOTPSent) {
+                    setIsOTPVerified(true);
+                  } else {
+                    setIsOTPSent(true);
+                  }}}
                 className="w-full py-2.5 px-4 bg-[#00d8ff] hover:bg-[#00c5eb] text-white font-bold rounded-lg transition-colors cursor-pointer text-center text-sm tracking-wider"
               >
-                Send One-Time Pin
+                {isOTPSent ? 'Verify OTP' : 'Send One-Time Pin'}
               </button>
             </form>
           </div>
         </div>
       )}
       {/* OTP Sent Confirmation and password reset form */}
-      {isOTPSent && (
+      {isOTPVerified && (
         <div className="absolute inset-0 bg-slate-50 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
           {/* Home Icon Link - now inside the forgot password overlay */}
           <Link to="/" className="absolute top-6 left-6 text-cyan-500 hover:text-cyan-600 transition-colors p-2 rounded-full hover:bg-slate-200">
