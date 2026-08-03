@@ -8,7 +8,10 @@ const Auth = () => {
   const [isLogin, setIsLogin] = useState(true)      // State to toggle between login and signup forms
   const [isBuyer, setIsBuyer] = useState(true)    // State to toggle between buyer and seller forms
   const [isForgotPassword, setIsForgotPassword] = useState(false) // State to toggle forgot password form
-  const [isSendEmail, setIsSendEmail] = useState(true) // State to toggle between sending email or SMS 
+  const [isSendEmail, setIsSendEmail] = useState(true) // State to toggle between sending email or SMS
+  const [isOTPSent, setIsOTPSent] = useState(false) // State to track if OTP has been sent
+
+  // TODO: Add form submission handlers and validation logic for login, signup, and forgot password forms
 
   return (
     <div className="relative min-h-screen bg-slate-50 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -332,7 +335,7 @@ const Auth = () => {
                   SMS
                 </label>
               </div>
-              
+
               <div>
                 <label htmlFor="username" className="text-slate-800 font-medium text-left text-sm md:text-base">Username:</label>
                 <input type="text" id="username" placeholder="username" required
@@ -353,10 +356,53 @@ const Auth = () => {
                 />
               </div>
               <button
-                type="submit"
+                type="submit" onClick={() => setIsOTPSent(true)}
                 className="w-full py-2.5 px-4 bg-[#00d8ff] hover:bg-[#00c5eb] text-white font-bold rounded-lg transition-colors cursor-pointer text-center text-sm tracking-wider"
               >
                 Send One-Time Pin
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+      {/* OTP Sent Confirmation and password reset form */}
+      {isOTPSent && (
+        <div className="absolute inset-0 bg-slate-50 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+          {/* Home Icon Link - now inside the forgot password overlay */}
+          <Link to="/" className="absolute top-6 left-6 text-cyan-500 hover:text-cyan-600 transition-colors p-2 rounded-full hover:bg-slate-200">
+            <Home className="w-8 h-8" />
+          </Link>
+          <div className="flex flex-col items-center w-full max-w-md">
+            {/* Forgot Password Header */}
+            <div className="flex flex-col items-center mb-6">
+              <h2 className="text-3xl font-extrabold text-slate-800 border-b-4 border-slate-800 pb-2 px-4 tracking-wide">
+                Reset Password
+              </h2>
+            </div>
+          </div>
+          <div className="bg-white border border-slate-800 rounded-[32px] p-8 md:p-10 w-full max-w-md shadow-sm">
+            <p className="text-slate-600 text-center mb-6">
+              Create a new password.
+            </p>
+            <form className="space-y-4">
+              <div>
+                <label htmlFor="new-password" className="text-slate-800 font-medium text-left text-sm md:text-base">New Password:</label>
+                <input type="password" id="new-password" placeholder="new password" required
+                  className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="confirm-password" className="text-slate-800 font-medium text-left text-sm md:text-base">Confirm Password:</label>
+                <input type="password" id="confirm-password" placeholder="confirm password" required
+                  className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
+                />
+              </div>
+              <button
+                type="submit" onClick="#"
+                className="w-full py-2.5 px-4 bg-[#00d8ff] hover:bg-[#00c5eb] text-white font-bold rounded-lg transition-colors cursor-pointer text-center text-sm tracking-wider"
+              >
+                Save New Password
               </button>
             </form>
           </div>
