@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-:root {   
+@theme {   
     /* Define CSS variables for colors */
     --primary-color: rgba(127, 255, 212, 1);
     --secondary-color: rgba(153, 255, 255, 1);
