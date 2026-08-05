@@ -26,6 +26,10 @@ const Auth = () => {
     company_registration: '',
     user_role: isBuyer ? 'buyer' : 'seller',
   });
+  const [signInForm, setSignInForm] = useState({
+    email: '',
+    password: '',
+  });
 
   // TODO: Add form submission handlers and validation logic for login, signup, and forgot password forms
   // Function to handle user registration (signup) form submission
@@ -50,6 +54,21 @@ const Auth = () => {
       console.error('Error occurred while signing up:', error);
     }
   };
+  // Function to handle user login (signin) form submission
+  const handleSignIn = async (event) => {
+    event.preventDefault();   //Preventing default form submission behavior to handle it via JavaScript.
+    try {
+      // Send a POST request to the signin endpoint
+      const response = await axios.post('/auth/sign-in', signInForm);
+      console.log(response.data);
+      setSignInForm({
+        email: '',
+        password: '',
+      });
+    } catch (error) {
+      console.error('Error occurred while signing in:', error);
+    }
+  };
 
   return (
     <div className="relative min-h-screen bg-slate-50 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -72,20 +91,20 @@ const Auth = () => {
             <p className="text-center text-slate-800 font-bold mb-6 text-sm">
               Welcome back to <span className="font-extrabold">MarketSquare</span>!
             </p>
-            <form className="grid grid-cols-[90px_1fr] gap-y-4 gap-x-3 items-center">
+            <form onSubmit={handleSignIn} className="grid grid-cols-[90px_1fr] gap-y-4 gap-x-3 items-center">
               <label htmlFor="username" className="text-slate-800 font-bold text-left text-sm md:text-base">Username:</label>
-              <input type="text" id="username" placeholder="username" required
+              <input type="text" id="username" placeholder="youremail@example.com" value={signInForm.email} onChange={(e) => setSignInForm({...signInForm, email: e.target.value})} required
                 className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
               />
 
               <label htmlFor="password" className="text-slate-800 font-bold text-left text-sm md:text-base">Password:</label>
-              <input type="password" id="password" placeholder="password" required
+              <input type="password" id="password" placeholder="password" value={signInForm.password} onChange={(e) => setSignInForm({...signInForm, password: e.target.value})} required
                 className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
               />
 
               {/* Forgot password link */}
               <div className="col-span-2 text-left">
-                <button onClick={() => setIsForgotPassword(true)} className="text-xs md:text-sm text-slate-500 hover:text-black transition-colors font-semibold cursor-pointer">
+                <button type="button" onClick={() => setIsForgotPassword(true)} className="text-xs md:text-sm text-slate-500 hover:text-black transition-colors font-semibold cursor-pointer">
                   Forgot password?
                 </button>
               </div>
