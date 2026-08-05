@@ -1,6 +1,6 @@
 // ============= Reusable authentication component =============
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Home } from 'lucide-react'
 import '../../index.css'
 import axios from 'axios'
@@ -9,6 +9,7 @@ axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5
 axios.defaults.withCredentials = true; // Enable sending cookies with requests
 
 const Auth = () => {
+  const navigate = useNavigate(); // Hook to programmatically navigate between routes
   let [isLogin, setIsLogin] = useState(true)      // State to toggle between login and signup forms
   const [isBuyer, setIsBuyer] = useState(true)    // State to toggle between buyer and seller forms
   const [isForgotPassword, setIsForgotPassword] = useState(false) // State to toggle forgot password form
@@ -30,6 +31,13 @@ const Auth = () => {
     email: '',
     password: '',
   });
+  const navigateToDashboard = (authenticatedUser) => {
+    if (authenticatedUser.user_role === 'buyer') {
+      navigate('/buyer-dashboard');
+    } else if (authenticatedUser.user_role === 'seller') {
+      navigate('/seller-dashboard');
+    }
+  };
 
   // TODO: Add form submission handlers and validation logic for login, signup, and forgot password forms
   // Function to handle user registration (signup) form submission
@@ -39,7 +47,7 @@ const Auth = () => {
       
       // Send a POST request to the signup endpoint
       const response = await axios.post('/auth/sign-up', signUpForm);
-      console.log(response.data);
+      const authenticatedUser = response.data.user;
       setSignUpForm({
         fullname: '',
         email: '',
@@ -50,6 +58,7 @@ const Auth = () => {
         company_registration: '',
         user_role: isBuyer ? 'buyer' : 'seller',
       });
+      navigateToDashboard(authenticatedUser);
     } catch (error) {
       console.error('Error occurred while signing up:', error);
     }
@@ -60,11 +69,12 @@ const Auth = () => {
     try {
       // Send a POST request to the signin endpoint
       const response = await axios.post('/auth/sign-in', signInForm);
-      console.log(response.data);
+      const authenticatedUser = response.data.user;
       setSignInForm({
         email: '',
         password: '',
       });
+      navigateToDashboard(authenticatedUser);
     } catch (error) {
       console.error('Error occurred while signing in:', error);
     }
