@@ -23,7 +23,7 @@ const generateToken = (id, user_role) => {
     );
 }
 // An endpoint for user registration. It handles the creation of new users in the database.
-router.post('/register', async (req, res) => { 
+router.post('/sign-up', async (req, res) => { 
     // Checking if the user already exists in the database, and registering new user if one does not exist.
     try {
         const { fullname, email, phone, password, company_name, primary_service, company_registration, user_role } = req.body;   //Extracts user details from the request body.
@@ -73,7 +73,7 @@ router.post('/register', async (req, res) => {
     }
 });
 // An endpoint for user login. It handles the authentication of users and returns a JWT token upon successful login.
-router.post('/login', async (req, res) => {
+router.post('/sign-in', async (req, res) => {
     try {
         const { email, password } = req.body;
 
@@ -112,6 +112,11 @@ router.get('/me', protect, async (req, res) => {
         console.error('Failed to fetch current user information:', error.message);
         res.status(500).json({ message: 'Failed to fetch current user information' });
     }
+});
+// An endpoint for user logout. It clears the JWT token from the cookies, effectively logging the user out of the application.
+router.post('/sign-out', (req, res) => {
+    res.clearCookie('token', cookieOptions);   //Clears the JWT token from the response cookies using the defined options.
+    return res.status(200).json({ message: 'Logout successful' });   //Returns a 200 OK response with a success message indicating that the user has been logged out.
 });
 
 export default router;   //Exports the router instance so that it can be imported and used in other parts of the application to handle authentication routes.
