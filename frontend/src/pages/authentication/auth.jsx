@@ -9,7 +9,7 @@ axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5
 axios.defaults.withCredentials = true; // Enable sending cookies with requests
 
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(true)      // State to toggle between login and signup forms
+  let [isLogin, setIsLogin] = useState(true)      // State to toggle between login and signup forms
   const [isBuyer, setIsBuyer] = useState(true)    // State to toggle between buyer and seller forms
   const [isForgotPassword, setIsForgotPassword] = useState(false) // State to toggle forgot password form
   const [isSendEmail, setIsSendEmail] = useState(true) // State to toggle between sending email or SMS
@@ -36,6 +36,16 @@ const Auth = () => {
       // Send a POST request to the signup endpoint
       const response = await axios.post('/auth/sign-up', signUpForm);
       console.log(response.data);
+      setSignUpForm({
+        fullname: '',
+        email: '',
+        phone: '',
+        password: '',
+        company_name: '',
+        primary_service: '',
+        company_registration: '',
+        user_role: isBuyer ? 'buyer' : 'seller',
+      });
     } catch (error) {
       console.error('Error occurred while signing up:', error);
     }
@@ -131,21 +141,13 @@ const Auth = () => {
           {/* -------radio buttons for selecting buyer or seller */}
           <div className="flex justify-center items-center gap-8 mb-6">
             <label className="flex items-center gap-2 text-slate-800 font-bold cursor-pointer select-none">
-              <input
-                type="radio"
-                name="userType"
-                checked={isBuyer}
-                onChange={() => setIsBuyer(true)}
+              <input type="radio" name="userType" checked={isBuyer} onChange={() => setIsBuyer(true)}
                 className="appearance-none w-4 h-4 rounded-full border-2 border-slate-400 checked:border-slate-800 checked:bg-slate-800 transition-all cursor-pointer relative checked:after:content-[''] checked:after:absolute checked:after:w-1.5 checked:after:h-1.5 checked:after:bg-white checked:after:rounded-full checked:after:top-1/2 checked:after:left-1/2 checked:after:-translate-x-1/2 checked:after:-translate-y-1/2"
               />
               Buyer
             </label>
             <label className="flex items-center gap-2 text-slate-800 font-bold cursor-pointer select-none">
-              <input
-                type="radio"
-                name="userType"
-                checked={!isBuyer}
-                onChange={() => setIsBuyer(false)}
+              <input type="radio" name="userType" checked={!isBuyer} onChange={() => setIsBuyer(false)}
                 className="appearance-none w-4 h-4 rounded-full border-2 border-slate-400 checked:border-slate-800 checked:bg-slate-800 transition-all cursor-pointer relative checked:after:content-[''] checked:after:absolute checked:after:w-1.5 checked:after:h-1.5 checked:after:bg-white checked:after:rounded-full checked:after:top-1/2 checked:after:left-1/2 checked:after:-translate-x-1/2 checked:after:-translate-y-1/2"
               />
               Seller
@@ -240,7 +242,7 @@ const Auth = () => {
                 />
 
                 <label htmlFor="registration-number" className="text-slate-800 font-bold text-left text-sm md:text-base">Reg. Number:</label>
-                <input type="text" id="registration-number" placeholder="registration number" value={signUpForm.registration_number} onChange={(e) => setSignUpForm({...signUpForm, registration_number: e.target.value})} required
+                <input type="text" id="registration-number" placeholder="registration number" value={signUpForm.company_registration} onChange={(e) => setSignUpForm({...signUpForm, company_registration: e.target.value})} required
                   className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
                 />
 

@@ -51,6 +51,7 @@ router.post('/sign-up', async (req, res) => {
         const salt = await bcrypt.genSalt(10);   //Generates a salt for hashing the password.
         const hashedPassword = await bcrypt.hash(password, salt);   //Hashes the password using the generated salt.
         // Checking the user role and inserting the new user into the database accordingly.
+        console.log('Registering new user with role:', user_role);   //Logs a message indicating the role of the new user being registered.
         let newUser;
         if (user_role.toLowerCase() === 'buyer') {
             newUser = await pool.query(
