@@ -72,5 +72,36 @@ router.post('/register', async (req, res) => {
         res.status(500).json({ message: 'Account registration failed' });   //Returns a 500 Internal Server Error response with an error message if something goes wrong during registration.
     }
 });
+// An endpoint for user login. It handles the authentication of users and returns a JWT token upon successful login.
+router.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Check if the user exists
+        const user = await pool.query('SELECT * FROM users.profiles WHERE email = $1', [email]);
+
+        if (user.rows.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Verify the password
+        const isMatch = await bcrypt.compare(password, user.rows[0].password);
+
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Invalid username or password' });
+        }
+
+        // Generate a JWT token
+        const token = generateToken(user.rows[0].id, user.rows[0].user_role);
+
+        // Set the JWT token in a cookie
+        res.cookie('token', token, cookieOptions);
+
+        return res.status(200).json({ message: 'Login successful', user: user.rows[0] });
+    } catch (error) {
+        console.error('Login failed:', error.message);
+        res.status(500).json({ message: 'Login failed' });
+    }
+});
 
 export default router;   //Exports the router instance so that it can be imported and used in other parts of the application to handle authentication routes.
