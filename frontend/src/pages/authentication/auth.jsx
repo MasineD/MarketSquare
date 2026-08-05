@@ -3,6 +3,10 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Home } from 'lucide-react'
 import '../../index.css'
+import axios from 'axios'
+
+axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'; // Set the base URL for axios requests, using an environment variable or defaulting to localhost
+axios.defaults.withCredentials = true; // Enable sending cookies with requests
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true)      // State to toggle between login and signup forms
@@ -12,7 +16,30 @@ const Auth = () => {
   const [isOTPSent, setIsOTPSent] = useState(false) // State to track if OTP has been sent
   const [isOTPVerified, setIsOTPVerified] = useState(false) // State to track if OTP has been verified
 
+  const [signUpForm, setSignUpForm] = useState({
+    fullname: '',
+    email: '',
+    phone: '',
+    password: '',
+    company_name: '',
+    primary_service: '',
+    company_registration: '',
+    user_role: isBuyer ? 'buyer' : 'seller',
+  });
+
   // TODO: Add form submission handlers and validation logic for login, signup, and forgot password forms
+  // Function to handle user registration (signup) form submission
+  const handleSignUp = async (event) => {
+    event.preventDefault();   //Preventing default form submission behavior to handle it via JavaScript.
+    try {
+      
+      // Send a POST request to the signup endpoint
+      const response = await axios.post('/auth/sign-up', signUpForm);
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error occurred while signing up:', error);
+    }
+  };
 
   return (
     <div className="relative min-h-screen bg-slate-50 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -136,40 +163,24 @@ const Auth = () => {
             </p>
 
             {isBuyer ? (
-              <form className="grid grid-cols-[90px_1fr] gap-y-4 gap-x-2 items-center">
+              <form onSubmit={handleSignUp} className="grid grid-cols-[90px_1fr] gap-y-4 gap-x-2 items-center">
                 <label htmlFor="fullname" className="text-slate-800 font-bold text-left text-sm md:text-base">Fullname:</label>
-                <input
-                  type="text"
-                  id="fullname"
-                  placeholder="fullname"
-                  required
+                <input type="text" id="fullname" placeholder="fullname" value={signUpForm.fullname} onChange={(e) => setSignUpForm({...signUpForm, fullname: e.target.value})} required
                   className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
                 />
 
                 <label htmlFor="signup-email" className="text-slate-800 font-bold text-left text-sm md:text-base">Email:</label>
-                <input
-                  type="email"
-                  id="signup-email"
-                  placeholder="email"
-                  required
+                <input type="email" id="signup-email" placeholder="email" value={signUpForm.email} onChange={(e) => setSignUpForm({...signUpForm, email: e.target.value})} required
                   className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
                 />
 
                 <label htmlFor="phone" className="text-slate-800 font-bold text-left text-sm md:text-base">Phone:</label>
-                <input
-                  type="text"
-                  id="phone"
-                  placeholder="phone"
-                  required
+                <input type="text" id="phone" placeholder="phone" value={signUpForm.phone} onChange={(e) => setSignUpForm({...signUpForm, phone: e.target.value})} required
                   className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
                 />
 
                 <label htmlFor="signup-password" className="text-slate-800 font-bold text-left text-sm md:text-base">Password:</label>
-                <input
-                  type="password"
-                  id="signup-password"
-                  placeholder="password"
-                  required
+                <input type="password" id="signup-password" placeholder="password" value={signUpForm.password} onChange={(e) => setSignUpForm({...signUpForm, password: e.target.value})} required
                   className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
                 />
 
@@ -212,66 +223,39 @@ const Auth = () => {
                 </p>
               </form>
             ) : (
-              <form className="grid grid-cols-[145px_1fr] gap-y-4 gap-x-2 items-center">
+              <form onSubmit={handleSignUp} className="grid grid-cols-[145px_1fr] gap-y-4 gap-x-2 items-center">
                 <label htmlFor="fullname" className="text-slate-800 font-bold text-left text-sm md:text-base">Fullname:</label>
-                <input
-                  type="text"
-                  id="fullname"
-                  placeholder="fullname"
-                  required
+                <input type="text" id="fullname" placeholder="fullname" value={signUpForm.fullname} onChange={(e) => setSignUpForm({...signUpForm, fullname: e.target.value})} required
                   className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
                 />
 
                 <label htmlFor="company-name" className="text-slate-800 font-bold text-left text-sm md:text-base">Company Name:</label>
-                <input
-                  type="text"
-                  id="company-name"
-                  placeholder="company name"
-                  required
+                <input type="text" id="company-name" placeholder="company name" value={signUpForm.company_name} onChange={(e) => setSignUpForm({...signUpForm, company_name: e.target.value})} required
                   className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
                 />
 
                 <label htmlFor="primary-service" className="text-slate-800 font-bold text-left text-sm md:text-base">Primary Service:</label>
-                <input
-                  type="text"
-                  id="primary-service"
-                  placeholder="primary service"
-                  required
+                <input type="text" id="primary-service" placeholder="primary service" value={signUpForm.primary_service} onChange={(e) => setSignUpForm({...signUpForm, primary_service: e.target.value})} required
                   className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
                 />
 
                 <label htmlFor="registration-number" className="text-slate-800 font-bold text-left text-sm md:text-base">Reg. Number:</label>
-                <input
-                  type="text"
-                  id="registration-number"
-                  placeholder="registration number"
+                <input type="text" id="registration-number" placeholder="registration number" value={signUpForm.registration_number} onChange={(e) => setSignUpForm({...signUpForm, registration_number: e.target.value})} required
                   className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
                 />
 
                 <label htmlFor="signup-email" className="text-slate-800 font-bold text-left text-sm md:text-base">Email:</label>
-                <input
-                  type="email"
-                  id="signup-email"
-                  placeholder="email"
-                  required
+                <input type="email" id="signup-email" placeholder="email" value={signUpForm.email} onChange={(e) => setSignUpForm({...signUpForm, email: e.target.value})} required
                   className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
                 />
 
                 <label htmlFor="phone" className="text-slate-800 font-bold text-left text-sm md:text-base">Phone:</label>
-                <input
-                  type="text"
-                  id="phone"
-                  placeholder="phone"
-                  required
+                <input type="text" id="phone" placeholder="phone" value={signUpForm.phone} onChange={(e) => setSignUpForm({...signUpForm, phone: e.target.value})} required
                   className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
                 />
 
                 <label htmlFor="signup-password" className="text-slate-800 font-bold text-left text-sm md:text-base">Password:</label>
-                <input
-                  type="password"
-                  id="signup-password"
-                  placeholder="password"
-                  required
+                <input type="password" id="signup-password" placeholder="password" value={signUpForm.password} onChange={(e) => setSignUpForm({...signUpForm, password: e.target.value})} required
                   className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
                 />
 
