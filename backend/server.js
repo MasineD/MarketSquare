@@ -11,9 +11,13 @@ import authRoutes from './routes/auth.js'; // Import the authentication routes
 dotenv.config();
 
 const app = express();
-
+// Frontend URL for CORS configuration
+const frontendURL = process.env.FRONTEND_URL || 'http://localhost:5173'; // Default to localhost if not set
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: frontendURL,
+    credentials: true
+})); // Enable CORS for the frontend URL with credentials support
 app.use(express.json());
 app.use(cookieParser()); // Middleware to parse cookies from incoming requests
 
