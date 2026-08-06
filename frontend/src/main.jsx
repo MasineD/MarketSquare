@@ -4,7 +4,7 @@ import './index.css'
 import App from './App.jsx'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 
-const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID; // Retrieve the Google OAuth Client ID from environment variables
+const clientId = "435924369832-fvothtp62b3rpvragmtrlogk84a674ab.apps.googleusercontent.com"; // Retrieve the Google OAuth Client ID from environment variables
 
 if (!clientId) {
   throw new Error('Missing VITE_GOOGLE_CLIENT_ID. Add your Google OAuth Web client ID to frontend/.env and restart Vite.');
