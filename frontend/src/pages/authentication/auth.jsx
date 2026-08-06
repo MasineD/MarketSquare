@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Home } from 'lucide-react'
 import '../../index.css'
 import axios from 'axios'
+import { GoogleLogin } from '@react-oauth/google'   // Importing the GoogleLogin component for Google OAuth authentication
 
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'; // Set the base URL for axios requests, using an environment variable or defaulting to localhost
 axios.defaults.withCredentials = true; // Enable sending cookies with requests
@@ -120,12 +121,9 @@ const Auth = () => {
               </div>
               {/* Social buttons spanning full width of card */}
                 <div className="col-span-2 flex gap-2 w-full mt-2">
-                  <button
-                    type="button"
-                    className="flex-1 py-1.5 px-1 border border-slate-800 rounded-md text-[10px] md:text-xs font-bold text-slate-800 hover:bg-slate-50 transition-colors text-center cursor-pointer whitespace-nowrap"
-                  >
-                    Continue with Google
-                  </button>
+                  <GoogleLogin onSuccess={(credentialResponse) => console.log('Login with Google Success', credentialResponse)} 
+                    onError={() => console.log('Login with GoogleFailed')}
+                  />
                   <button
                     type="button"
                     className="flex-1 py-1.5 px-1 border border-slate-800 rounded-md text-[10px] md:text-xs font-bold text-slate-800 hover:bg-slate-50 transition-colors text-center cursor-pointer whitespace-nowrap"
@@ -217,12 +215,9 @@ const Auth = () => {
 
                 {/* Social buttons spanning full width of card */}
                 <div className="col-span-2 flex gap-2 w-full mt-2">
-                  <button
-                    type="button"
-                    className="flex-1 py-1.5 px-1 border border-slate-800 rounded-md text-[10px] md:text-xs font-bold text-slate-800 hover:bg-slate-50 transition-colors text-center cursor-pointer whitespace-nowrap"
-                  >
-                    Continue with Google
-                  </button>
+                  <GoogleLogin onSuccess={(credentialResponse) => console.log('Login with Google Success', credentialResponse)} 
+                    onError={() => console.log('Login with GoogleFailed')}
+                  />
                   <button
                     type="button"
                     className="flex-1 py-1.5 px-1 border border-slate-800 rounded-md text-[10px] md:text-xs font-bold text-slate-800 hover:bg-slate-50 transition-colors text-center cursor-pointer whitespace-nowrap"
