@@ -122,7 +122,7 @@ const Auth = () => {
               {/* Social buttons spanning full width of card */}
                 <div className="col-span-2 flex gap-2 w-full mt-2">
                   <GoogleLogin onSuccess={(credentialResponse) => console.log('Login with Google Success', credentialResponse)} 
-                    onError={() => console.log('Login with GoogleFailed')}
+                    onError={() => console.log('Login with Google Failed')}
                   />
                   <button
                     type="button"
@@ -215,8 +215,8 @@ const Auth = () => {
 
                 {/* Social buttons spanning full width of card */}
                 <div className="col-span-2 flex gap-2 w-full mt-2">
-                  <GoogleLogin onSuccess={(credentialResponse) => console.log('Login with Google Success', credentialResponse)} 
-                    onError={() => console.log('Login with GoogleFailed')}
+                  <GoogleLogin text="signup_with" onSuccess={(credentialResponse) => console.log('Login with Google Success', credentialResponse)}
+                    onError={() => console.log('Login with Google Failed')}
                   />
                   <button
                     type="button"
