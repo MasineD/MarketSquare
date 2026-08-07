@@ -65,6 +65,7 @@ const Auth = () => {
       console.error('Error occurred while signing up:', error);
     }
   };
+  // Function to sign up with google
   const handleGoogleSignUp = async (credentialResponse) => {
   try {
     // Decode the JWT token to extract user information
@@ -76,7 +77,7 @@ const Auth = () => {
         email: decoded.email,
         user_role: isBuyer ? 'buyer' : 'seller', // Fixed: properly set the user role
       };
-      
+
       // Send a POST request to the google-signup endpoint
       const response = await axios.post('/auth/google-signup', googleSignUpForm);
       const authenticatedUser = response.data.user;
@@ -100,6 +101,25 @@ const Auth = () => {
       navigateToDashboard(authenticatedUser);
     } catch (error) {
       console.error('Error occurred while signing in:', error);
+    }
+  };
+  // A function to sign in with Google
+  const handleGoogleSignIn = async (credentialResponse) => {
+    try {
+      // Decode the JWT token to extract user information
+      const decoded = jwtDecode(credentialResponse.credential);
+      
+      // Prepare the data for the backend
+      const googleSignInForm = {
+        email: decoded.email,
+      };
+
+      // Send a POST request to the google-signin endpoint
+      const response = await axios.post('/auth/google-signin', googleSignInForm);
+      const authenticatedUser = response.data.user;
+      navigateToDashboard(authenticatedUser);
+    } catch (error) {
+      console.error('Error occurred while signing in with Google:', error);
     }
   };
 
@@ -143,7 +163,7 @@ const Auth = () => {
               </div>
               {/* Social buttons spanning full width of card */}
                 <div className="col-span-2 flex gap-2 w-full mt-2">
-                  <GoogleLogin onSuccess={(credentialResponse) => handleGoogleSignUp(credentialResponse)} 
+                  <GoogleLogin onSuccess={(credentialResponse) => handleGoogleSignIn(credentialResponse)} 
                     onError={() => console.log('Login with Google Failed')}
                   />
                   <button
