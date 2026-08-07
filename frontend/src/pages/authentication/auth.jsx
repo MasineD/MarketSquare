@@ -5,6 +5,7 @@ import { Home } from 'lucide-react'
 import '../../index.css'
 import axios from 'axios'
 import { GoogleLogin } from '@react-oauth/google'   // Importing the GoogleLogin component for Google OAuth authentication
+import { jwtDecode } from 'jwt-decode' // Importing the jwt_decode library to decode JWT tokens
 
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'; // Set the base URL for axios requests, using an environment variable or defaulting to localhost
 axios.defaults.withCredentials = true; // Enable sending cookies with requests
@@ -121,7 +122,14 @@ const Auth = () => {
               </div>
               {/* Social buttons spanning full width of card */}
                 <div className="col-span-2 flex gap-2 w-full mt-2">
-                  <GoogleLogin onSuccess={(credentialResponse) => console.log('Login with Google Success', credentialResponse)} 
+                  <GoogleLogin onSuccess={(credentialResponse) => {
+                    const decoded = jwtDecode(credentialResponse.credential); // Decode the JWT token to extract user information
+
+                    // Email and username of the user accessed through the decoded JWT token
+                    const email = decoded.email;
+                    const fullname = decoded.name;
+                    console.log('Login with Google Success:', { email, fullname });
+                  }} 
                     onError={() => console.log('Login with Google Failed')}
                   />
                   <button
