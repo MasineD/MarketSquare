@@ -65,6 +65,27 @@ const Auth = () => {
       console.error('Error occurred while signing up:', error);
     }
   };
+  const handleGoogleSignUp = async (credentialResponse) => {
+  try {
+    // Decode the JWT token to extract user information
+    const decoded = jwtDecode(credentialResponse.credential);
+    
+      // Prepare the data for the backend
+      const googleSignUpForm = {
+        fullname: decoded.name || '', // Provide fallback in case name is missing
+        email: decoded.email,
+        user_role: isBuyer ? 'buyer' : 'seller', // Fixed: properly set the user role
+      };
+      
+      // Send a POST request to the google-signup endpoint
+      const response = await axios.post('/auth/google-signup', googleSignUpForm);
+      const authenticatedUser = response.data.user;
+      navigateToDashboard(authenticatedUser);
+    } catch (error) {
+      console.error('Error occurred while signing up with Google:', error);
+      // Optionally show user-friendly error message
+    }
+  };
   // Function to handle user login (signin) form submission
   const handleSignIn = async (event) => {
     event.preventDefault();   //Preventing default form submission behavior to handle it via JavaScript.
@@ -122,14 +143,7 @@ const Auth = () => {
               </div>
               {/* Social buttons spanning full width of card */}
                 <div className="col-span-2 flex gap-2 w-full mt-2">
-                  <GoogleLogin onSuccess={(credentialResponse) => {
-                    const decoded = jwtDecode(credentialResponse.credential); // Decode the JWT token to extract user information
-
-                    // Email and username of the user accessed through the decoded JWT token
-                    const email = decoded.email;
-                    const fullname = decoded.name;
-                    console.log('Login with Google Success:', { email, fullname });
-                  }} 
+                  <GoogleLogin onSuccess={(credentialResponse) => handleGoogleSignUp(credentialResponse)} 
                     onError={() => console.log('Login with Google Failed')}
                   />
                   <button
@@ -223,7 +237,7 @@ const Auth = () => {
 
                 {/* Social buttons spanning full width of card */}
                 <div className="col-span-2 flex gap-2 w-full mt-2">
-                  <GoogleLogin text="signup_with" onSuccess={(credentialResponse) => console.log('Login with Google Success', credentialResponse)}
+                  <GoogleLogin text="signup_with" onSuccess={(credentialResponse) => handleGoogleSignUp(credentialResponse)}
                     onError={() => console.log('Login with Google Failed')}
                   />
                   <button
