@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'
 import Profile from './pages/features/profile'
 import Auth from './pages/authentication/auth'
 import Home from './pages/landingPage/home'
+import BuyerDashboard from './pages/dashboards/buyerDashboard'
+import SellerDashboard from './pages/dashboards/sellerDashboard'
 
 const Layout = ({ children }) => {
   return (
@@ -30,6 +32,8 @@ const App = () => {
         <Route path="/" element={<Layout><Home /></Layout>} />
         <Route path="/profile" element={<Layout><Profile /></Layout>} />
         <Route path="/auth" element={<Auth />} />
+        <Route path="/buyer-dashboard" element={<Layout><BuyerDashboard /></Layout>} />
+        <Route path="/seller-dashboard" element={<Layout><SellerDashboard /></Layout>} />
       </Routes>
     </Router>
   )

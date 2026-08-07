@@ -51,6 +51,7 @@ router.post('/sign-up', async (req, res) => {
         const salt = await bcrypt.genSalt(10);   //Generates a salt for hashing the password.
         const hashedPassword = await bcrypt.hash(password, salt);   //Hashes the password using the generated salt.
         // Checking the user role and inserting the new user into the database accordingly.
+        console.log('Registering new user with role:', user_role);   //Logs a message indicating the role of the new user being registered.
         let newUser;
         if (user_role.toLowerCase() === 'buyer') {
             newUser = await pool.query(
@@ -70,6 +71,31 @@ router.post('/sign-up', async (req, res) => {
     } catch (error) {
         console.error('Account registration failed:', error.message);   //Logs any errors that occur during the registration process to the console for debugging purposes.
         res.status(500).json({ message: 'Account registration failed' });   //Returns a 500 Internal Server Error response with an error message if something goes wrong during registration.
+    }
+});
+// An endpoint to sign up with Google OAuth. It handles the authentication of users using their Google account and returns a JWT token upon successful login.
+router.post('/google-signup', async (req, res) => {
+    try {
+        const { fullname, email, user_role } = req.body;   //Gets the fullname and email from the request body.
+        if(!fullname || !email || !user_role) {   //Checks if fullname, email, and user_role are provided.
+            return res.status(400).json({ message: 'Fullname, email, and user role are required for Google signup' });   //Returns a 400 Bad Request response if any of the required fields is missing.
+        }
+        // Check if a user already exists with the provided Google email
+        const existingUser = await pool.query('SELECT * FROM users.profiles WHERE email = $1', [email]);
+        if (existingUser.rows.length > 0) {
+            return res.status(400).json({ message: 'User with this email already exists' });   //Returns a 400 Bad Request response if a user with the provided email already exists.
+        }
+        // Create a new user in the database with the provided Google account information
+        const newUser = await pool.query(
+            `INSERT INTO users.profiles (fullname, email, user_role) VALUES ($1, $2, $3) RETURNING *`, [fullname, email, user_role.toLowerCase()]
+        );
+        // Generating a JWT token for the newly registered user and setting it in the response cookies.
+        const token = generateToken(newUser.rows[0].id, newUser.rows[0].user_role);   //Generates a JWT token for the new user.
+        res.cookie('token', token, cookieOptions);   //Sets the JWT token in the response cookies with the defined options.
+        return res.status(201).json({ message: 'Account registered successfully', user: newUser.rows[0] });
+    } catch (error) {
+        console.error('Google signup failed:', error.message);
+        res.status(500).json({ message: 'Google signup failed' });
     }
 });
 // An endpoint for user login. It handles the authentication of users and returns a JWT token upon successful login.
@@ -101,6 +127,29 @@ router.post('/sign-in', async (req, res) => {
     } catch (error) {
         console.error('Login failed:', error.message);
         res.status(500).json({ message: 'Login failed' });
+    }
+});
+// An endpoint to check if user has an account before allowing continuation with google sign-in. It checks if a user with the provided email exists in the database.
+router.post('/google-signin', async (req, res) => {
+    try {
+        const { email } = req.body;   //Extracts the email from the request body.
+        if(!email) {   //Checks if the email is provided.
+            return res.status(400).json({ message: 'Email is required to check for existing Google user' });   //Returns a 400 Bad Request response if the email is not provided.
+        }
+        const user = await pool.query('SELECT * FROM users.profiles WHERE email = $1', [email]);
+        if (user.rows.length === 0) {
+            return res.status(404).json({ message: 'User not found. Sign up first.' });
+        }
+        // Generate a JWT token
+        const token = generateToken(user.rows[0].id, user.rows[0].user_role);
+
+        // Set the JWT token in a cookie
+        res.cookie('token', token, cookieOptions);
+
+        return res.status(200).json({ message: 'Login successful', user: user.rows[0] });
+    } catch (error) {
+        console.error('Failed to check Google user:', error.message);
+        res.status(500).json({ message: 'Failed to check Google user' });
     }
 });
 // An endpoint to get the current authenticated user's information. It uses the protect middleware to ensure that only authenticated users can access this route.
