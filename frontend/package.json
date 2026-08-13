@@ -11,10 +11,12 @@
     "test": "vitest run --coverage"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@react-oauth/google": "^0.13.5",
     "@tailwindcss/vite": "^4.3.3",
     "@types/react-facebook-login": "^4.1.11",
     "axios": "^1.18.1",
+    "emailjs": "^5.0.2",
     "jspdf": "^4.2.1",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^1.27.0",
