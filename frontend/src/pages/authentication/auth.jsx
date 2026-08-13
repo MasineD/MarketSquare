@@ -18,7 +18,7 @@ const Auth = () => {
   const [isSendEmail, setIsSendEmail] = useState(true) // State to toggle between sending email or SMS
   const [isOTPSent, setIsOTPSent] = useState(false) // State to track if OTP has been sent
   const [isOTPVerified, setIsOTPVerified] = useState(false) // State to track if OTP has been verified
-
+  // State for the sign-up form
   const [signUpForm, setSignUpForm] = useState({
     fullname: '',
     email: '',
@@ -29,10 +29,19 @@ const Auth = () => {
     company_registration: '',
     user_role: isBuyer ? 'buyer' : 'seller',
   });
+  // State for the sign-in form
   const [signInForm, setSignInForm] = useState({
     email: '',
     password: '',
   });
+  // State for the forgot password form
+  const [forgotPasswordForm, setForgotPasswordForm] = useState({
+    email: '',
+    phone: '',
+  });
+  // State to hold messages for user feedback
+  const [message, setMessage] = useState('');
+  // Function to navigate to the appropriate dashboard based on user role
   const navigateToDashboard = (authenticatedUser) => {
     if (authenticatedUser.user_role === 'buyer') {
       navigate('/buyer-dashboard');
@@ -120,6 +129,26 @@ const Auth = () => {
       navigateToDashboard(authenticatedUser);
     } catch (error) {
       console.error('Error occurred while signing in with Google:', error);
+    }
+  };
+  // A function to handle forgot password form submission
+  const handleForgotPassword = async (event) => {
+    event.preventDefault();   //Preventing default form submission behavior to handle it via JavaScript.
+    try {
+      // Send a POST request to the forgot-password endpoint
+      if(isSendEmail){
+        const response = await axios.post('/auth/forgot-password', { email: forgotPasswordForm.email });
+        forgotPasswordForm.email = '';
+        setMessage(response.data.message);
+        setIsOTPSent(true); // Set OTP sent state to true after sending the email
+      }
+      const response = await axios.post('/auth/forgot-password', { phone: forgotPasswordForm.phone });
+      forgotPasswordForm.phone = '';
+      setMessage(response.data.message);
+      setIsOTPSent(true); // Set OTP sent state to true after sending the SMS
+      // Handle the response, e.g., show a success message or navigate to a different page
+    } catch (error) {
+      console.error('Error occurred while requesting password reset:', error);
     }
   };
 
@@ -372,7 +401,7 @@ const Auth = () => {
             <p className="text-slate-600 text-center mb-6">
               Enter your {isSendEmail ? 'email address' : 'phone number'} and we'll send you a One-Time Pin to reset your password.
             </p>
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleForgotPassword}>
               {/* Radio Buttons to choose between whether to send OTP via email or phone */}
               <div className="flex justify-center items-center gap-8 mb-6">
                 <label className="flex items-center gap-2 text-slate-800 font-bold cursor-pointer select-none">
@@ -394,6 +423,7 @@ const Auth = () => {
                   {isSendEmail ? 'Email Address' : 'Phone Number'}
                 </label>
                 <input type={isSendEmail ? "email" : "tel"} id="forgot-email" placeholder={isSendEmail ? "email@example.com" : "phone number"} required disabled={isOTPSent}
+                  onChange={isSendEmail ? (e) => setForgotPasswordForm({...forgotPasswordForm, email: e.target.value}) : (e) => setForgotPasswordForm({...forgotPasswordForm, phone: e.target.value})}
                   className="mt-1 block w-full px-3 py-2 border border-slate-800 rounded-md shadow-sm focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
                 />
               </div>
@@ -409,18 +439,22 @@ const Auth = () => {
                   />
                 </div>
               )}
-
-              <button
-                type="submit" onClick={(e) => {
-                  if (isOTPSent) {
-                    setIsOTPVerified(true);
-                  } else {
-                    setIsOTPSent(true);
-                  }}}
+              <p className="text-xs text-slate-500 text-center">{message}</p>
+              {!isOTPSent ? (
+                <button
+                  type="submit"
+                  className="w-full py-2.5 px-4 bg-[#00d8ff] hover:bg-[#00c5eb] text-white font-bold rounded-lg transition-colors cursor-pointer text-center text-sm tracking-wider"
+                >
+                  Send One-Time Pin
+                </button>
+              ) : (
+                <button
+                type="submit" 
                 className="w-full py-2.5 px-4 bg-[#00d8ff] hover:bg-[#00c5eb] text-white font-bold rounded-lg transition-colors cursor-pointer text-center text-sm tracking-wider"
               >
-                {isOTPSent ? 'Verify OTP' : 'Send One-Time Pin'}
+                Verify OTP
               </button>
+              )}
             </form>
           </div>
         </div>
