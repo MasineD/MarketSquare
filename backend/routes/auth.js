@@ -193,16 +193,23 @@ router.post('/forgot-password', async (req, res) => {
             return res.status(404).json({ message: 'No user found with the provided details' });
         }
         
-        // Here you would typically generate a password reset token and send it via email or SMS.
+        // Generate a One-Time-Pin (OTP) for password reset
+        const otp = generateOTP();
         // If email was provided, send via email. If phone was provided, send via SMS.
         const contactMethod = email ? 'email' : 'phone';
         return res.status(200).json({ 
-            message: `Password reset instructions sent to your ${contactMethod}` 
+            message: `Password reset instructions sent to your ${contactMethod}`, 
+            otp: otp // Include the generated OTP in the response (for demonstration purposes only - in a real application, this should be sent securely via the chosen contact method)
         });
     } catch (error) {
         console.error('Failed to initiate password reset:', error.message);
         res.status(500).json({ message: 'Failed to initiate password reset' });
     }
 });
+/* A function to generate One-Time-Pin (OTP) for password reset. 
+ This function generates a random 6-digit number to be used as an OTP for verifying the user's identity during the password reset process.*/
+const generateOTP = () => {
+    return Math.floor(100000 + Math.random() * 900000).toString(); // Generates a random 6-digit number and converts it to a string.
+};
 
 export default router;   //Exports the router instance so that it can be imported and used in other parts of the application to handle authentication routes.
