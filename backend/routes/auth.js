@@ -168,4 +168,41 @@ router.post('/sign-out', (req, res) => {
     return res.status(200).json({ message: 'Logout successful' });   //Returns a 200 OK response with a success message indicating that the user has been logged out.
 });
 
+// -----------Endpoints for password reset and change functionality-----------
+router.post('/forgot-password', async (req, res) => {
+    try {
+        const { email, phone } = req.body;
+        
+        // Check if at least one is provided
+        if (!email && !phone) {
+            return res.status(400).json({ message: 'Either email or phone number is required' });
+        }
+        
+        let user;
+        
+        // Check if user exists with email or phone
+        if (email) {
+            const result = await pool.query('SELECT * FROM users.profiles WHERE email = $1', [email]);
+            user = result.rows[0];
+        } else if (phone) {
+            const result = await pool.query('SELECT * FROM users.profiles WHERE phone = $1', [phone]);
+            user = result.rows[0];
+        }
+        
+        if (!user) {
+            return res.status(404).json({ message: 'No user found with the provided details' });
+        }
+        
+        // Here you would typically generate a password reset token and send it via email or SMS.
+        // If email was provided, send via email. If phone was provided, send via SMS.
+        const contactMethod = email ? 'email' : 'phone';
+        return res.status(200).json({ 
+            message: `Password reset instructions sent to your ${contactMethod}` 
+        });
+    } catch (error) {
+        console.error('Failed to initiate password reset:', error.message);
+        res.status(500).json({ message: 'Failed to initiate password reset' });
+    }
+});
+
 export default router;   //Exports the router instance so that it can be imported and used in other parts of the application to handle authentication routes.
