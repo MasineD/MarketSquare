@@ -390,13 +390,6 @@ const Auth = () => {
               </div>
 
               <div>
-                <label htmlFor="username" className="text-slate-800 font-medium text-left text-sm md:text-base">Username:</label>
-                <input type="text" id="username" placeholder="username" required disabled={isOTPSent}
-                  className="w-full px-3 py-1.5 border border-slate-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 bg-white"
-                />
-              </div>
-
-              <div>
                 <label htmlFor="forgot-email" className="block text-sm font-medium text-slate-700">
                   {isSendEmail ? 'Email Address' : 'Phone Number'}
                 </label>
