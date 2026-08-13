@@ -208,7 +208,7 @@ router.post('/forgot-password', async (req, res) => {
         const otp = generateOTP(); // Assuming this function generates a 6-digit OTP
         
         // Set expiration time to 30 seconds from now
-        const expiresAt = new Date(Date.now() + 30 * 1000); // 30 seconds in milliseconds
+        const expiresAt = new Date(Date.now() + 1 * 60000); // 30 seconds in milliseconds
         
         // Insert the new OTP record into the forgot_password table
         const insertQuery = `
@@ -261,5 +261,107 @@ router.post('/forgot-password', async (req, res) => {
 const generateOTP = () => {
     return Math.floor(100000 + Math.random() * 900000).toString(); // Generates a random 6-digit number and converts it to a string.
 };
-
+// An endpoint to verify OTP after it has been sent
+// Simpler version - just validates the OTP
+router.post('/verify-otp', async (req, res) => {
+    try {
+        const { email, phone, otp } = req.body;
+        
+        // Validate required fields
+        if (!otp) {
+            return res.status(400).json({ 
+                message: 'OTP is required' 
+            });
+        }
+        
+        if (!email && !phone) {
+            return res.status(400).json({ 
+                message: 'Either email or phone number is required' 
+            });
+        }
+        
+        // Find user by email or phone
+        let user;
+        
+        if (email) {
+            const result = await pool.query('SELECT * FROM users.profiles WHERE email = $1', [email]);
+            user = result.rows[0];
+        } else if (phone) {
+            const result = await pool.query('SELECT * FROM users.profiles WHERE phone = $1', [phone]);
+            user = result.rows[0];
+        }
+        
+        if (!user) {
+            return res.status(404).json({ 
+                message: 'No user found with the provided details' 
+            });
+        }
+        
+        // Verify the OTP
+        const otpQuery = `
+            SELECT * FROM users.forgot_password 
+            WHERE user_id = $1 
+            AND otp = $2 
+            AND is_used = FALSE 
+            AND expires_at > CURRENT_TIMESTAMP
+            ORDER BY created_at DESC 
+            LIMIT 1
+        `;
+        
+        const otpResult = await pool.query(otpQuery, [user.id, otp]);
+        
+        if (otpResult.rows.length === 0) {
+            // Check if OTP exists but expired
+            const expiredQuery = `
+                SELECT * FROM users.forgot_password 
+                WHERE user_id = $1 
+                AND otp = $2 
+                AND is_used = FALSE 
+                AND expires_at <= CURRENT_TIMESTAMP
+                ORDER BY created_at DESC 
+                LIMIT 1
+            `;
+            
+            const expiredResult = await pool.query(expiredQuery, [user.id, otp]);
+            
+            if (expiredResult.rows.length > 0) {
+                return res.status(400).json({ 
+                    message: 'OTP has expired. Please request a new one.',
+                    expired: true
+                });
+            }
+            
+            return res.status(400).json({ 
+                message: 'Invalid OTP. Please check and try again.' 
+            });
+        }
+        
+        const resetRecord = otpResult.rows[0];
+        
+        // Calculate time remaining
+        const now = new Date();
+        const expiresAt = new Date(resetRecord.expires_at);
+        const timeRemaining = Math.max(0, Math.floor((expiresAt - now) / 1000));
+        
+        return res.status(200).json({ 
+            message: 'OTP verified successfully',
+            verified: true,
+            resetId: resetRecord.id,
+            userId: user.id,
+            timeRemaining: timeRemaining,
+            user: {
+                id: user.id,
+                email: user.email,
+                fullname: user.fullname,
+                user_role: user.user_role
+            }
+        });
+        
+    } catch (error) {
+        console.error('Failed to verify OTP:', error.message);
+        res.status(500).json({ 
+            message: 'Failed to verify OTP. Please try again.' 
+        });
+    }
+});
 export default router;   //Exports the router instance so that it can be imported and used in other parts of the application to handle authentication routes.
