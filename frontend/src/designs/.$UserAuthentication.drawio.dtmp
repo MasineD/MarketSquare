@@ -1,6 +1,6 @@
 <mxfile host="Electron">
   <diagram name="Page-1" id="x_TvwagbzD1HEuN1Qpor">
-    <mxGraphModel dx="2278" dy="873" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1894" dy="642" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -178,10 +178,10 @@
         <mxCell id="2MNyTh6Y0wLDCj98tPlA-60" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 10px; color: rgb(153, 153, 153);&quot;&gt;&lt;u&gt;Forgot password&lt;/u&gt;&lt;/font&gt;" vertex="1">
           <mxGeometry height="30" width="100" x="175" y="1100" as="geometry" />
         </mxCell>
-        <mxCell id="2MNyTh6Y0wLDCj98tPlA-63" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Continue with Google&lt;/font&gt;" vertex="1">
+        <mxCell id="2MNyTh6Y0wLDCj98tPlA-63" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Sign up with Google&lt;/font&gt;" vertex="1">
           <mxGeometry height="20" width="100" x="170" y="290" as="geometry" />
         </mxCell>
-        <mxCell id="2MNyTh6Y0wLDCj98tPlA-64" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Continue with Facebook&lt;/font&gt;" vertex="1">
+        <mxCell id="2MNyTh6Y0wLDCj98tPlA-64" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;Sign up with Facebook&lt;/font&gt;" vertex="1">
           <mxGeometry height="20" width="116.25" x="275" y="290" as="geometry" />
         </mxCell>
         <mxCell id="2MNyTh6Y0wLDCj98tPlA-65" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
@@ -264,6 +264,9 @@
         </mxCell>
         <mxCell id="2MNyTh6Y0wLDCj98tPlA-91" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2FE8FF;" value="Save Password" vertex="1">
           <mxGeometry height="20" width="150" x="210" y="1860" as="geometry" />
+        </mxCell>
+        <mxCell id="bNsWJoLvGiLV1xeKMLd_-19" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="360" width="640" x="760" y="470" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
