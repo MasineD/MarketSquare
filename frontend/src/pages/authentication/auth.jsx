@@ -6,6 +6,8 @@ import '../../index.css'
 import axios from 'axios'
 import { GoogleLogin } from '@react-oauth/google'   // Importing the GoogleLogin component for Google OAuth authentication
 import { jwtDecode } from 'jwt-decode' // Importing the jwt_decode library to decode JWT tokens
+import emailjs from '@emailjs/browser'
+
 
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'; // Set the base URL for axios requests, using an environment variable or defaulting to localhost
 axios.defaults.withCredentials = true; // Enable sending cookies with requests
@@ -41,6 +43,19 @@ const Auth = () => {
   });
   // State to hold messages for user feedback
   const [message, setMessage] = useState('');
+  // State for loading and status
+  const [isLoading, setIsLoading] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState({
+    type: null,
+    message: "",
+  });
+  // State for OTP data
+  const [otpData, setOtpData] = useState({
+    otp: '',
+    userEmail: '',
+    userName: '',
+  });
+  
   // Function to navigate to the appropriate dashboard based on user role
   const navigateToDashboard = (authenticatedUser) => {
     if (authenticatedUser.user_role === 'buyer') {
@@ -131,24 +146,146 @@ const Auth = () => {
       console.error('Error occurred while signing in with Google:', error);
     }
   };
+  
+  // Function to send the OTP via email or SMS
+  const handleSendOTP = async (otp, userEmail, userName) => {
+    try {
+      setIsLoading(true);
+      setSubmitStatus({ type: null, message: "" });
+      
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+      // Checking if we're using the correct environment variables
+      if (!serviceId || !templateId || !publicKey) {
+        throw new Error("EmailJS configuration variables are missing");
+      }
+      
+      // Send the OTP via EmailJS
+      await emailjs.send(serviceId, templateId, {
+        name: userName || 'User',
+        email: userEmail,
+        subject: 'Password Reset OTP',
+        message: `Your password reset OTP is: ${otp}\n\nThis code will expire in 10 minutes.\n\nIf you didn't request this password reset, please ignore this email.`,
+      }, publicKey);
+      
+      // If successful
+      setSubmitStatus({
+        type: "success",
+        message: "OTP sent successfully to your email."
+      });
+      
+    } catch (error) {
+      console.error("Error occurred trying to send OTP:", error.message);
+      setSubmitStatus({
+        type: "error",
+        message: error.message || "Error occurred trying to send OTP"
+      });
+      throw error; // Re-throw to handle in the calling function
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // A function to handle forgot password form submission
   const handleForgotPassword = async (event) => {
     event.preventDefault();   //Preventing default form submission behavior to handle it via JavaScript.
+    
     try {
+      setIsLoading(true);
+      setMessage('');
+      
+      let response;
+      let userEmail = '';
+      let userName = '';
+      
       // Send a POST request to the forgot-password endpoint
-      if(isSendEmail){
-        const response = await axios.post('/auth/forgot-password', { email: forgotPasswordForm.email });
+      if (isSendEmail) {
+        // Check if email is provided
+        if (!forgotPasswordForm.email) {
+          setMessage('Please enter your email address');
+          setIsLoading(false);
+          return;
+        }
+        
+        response = await axios.post('/auth/forgot-password', { 
+          email: forgotPasswordForm.email 
+        });
+        
+        // Store email for sending OTP
+        userEmail = forgotPasswordForm.email;
+        // You might want to get the user's name from the response
+        userName = response.data.user?.fullname || 'User';
+        
+        // Clear the form field
         forgotPasswordForm.email = '';
-        setMessage(response.data.message);
-        setIsOTPSent(true); // Set OTP sent state to true after sending the email
+      } else {
+        // Check if phone is provided
+        if (!forgotPasswordForm.phone) {
+          setMessage('Please enter your phone number');
+          setIsLoading(false);
+          return;
+        }
+        
+        response = await axios.post('/auth/forgot-password', { 
+          phone: forgotPasswordForm.phone 
+        });
+        
+        // For SMS, you might want to get the user's email for the response
+        userEmail = response.data.user?.email || '';
+        userName = response.data.user?.fullname || 'User';
+        
+        // Clear the form field
+        forgotPasswordForm.phone = '';
       }
-      const response = await axios.post('/auth/forgot-password', { phone: forgotPasswordForm.phone });
-      forgotPasswordForm.phone = '';
-      setMessage(response.data.message);
-      setIsOTPSent(true); // Set OTP sent state to true after sending the SMS
-      // Handle the response, e.g., show a success message or navigate to a different page
+      
+      // Store the OTP received from the backend
+      const otp = response.data.otp;
+      
+      // Store OTP data for potential use in verification
+      setOtpData({
+        otp: otp,
+        userEmail: userEmail,
+        userName: userName,
+      });
+      
+      // If we have an email and we're sending via email, send the OTP
+      if (isSendEmail && userEmail) {
+        try {
+          await handleSendOTP(otp, userEmail, userName);
+          setSubmitStatus({
+            type: "success",
+            message: "OTP sent successfully to your email."
+          });
+          // setMessage('OTP sent successfully to your email. Please check your inbox.');
+        } catch (emailError) {
+          // If email sending fails, still show the backend message
+          // setMessage(response.data.message || 'OTP generated but could not be sent via email. Please try again.');
+          setSubmitStatus({
+            type: "success",
+            message: response.data.message || 'OTP generated but could not be sent via email. Please try again.'
+          });
+          console.error('Email sending failed:', emailError);
+        }
+      } else if (!isSendEmail) {
+        // For SMS, we would send via Twilio or another SMS service
+        // Since EmailJS doesn't support SMS, we'll show a message
+        // setMessage(response.data.message || 'OTP sent successfully to your phone via SMS.');
+        setSubmitStatus({
+            type: "success",
+            message: response.data.message || 'OTP sent successfully to your phone via SMS.'
+        });
+      }
+      
+      // Set OTP sent state to true
+      setIsOTPSent(true);
+      
     } catch (error) {
-      console.error('Error occurred while requesting password reset:', error);
+      console.error('Error occurred while requesting password reset:', error.message);
+      setMessage(error.response?.data?.message || 'Failed to send OTP. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -440,12 +577,18 @@ const Auth = () => {
                 </div>
               )}
               <p className="text-xs text-slate-500 text-center">{message}</p>
+              {submitStatus.message && (
+                <p className={`text-xs text-center ${submitStatus.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+                  {submitStatus.message}
+                </p>
+              )}
               {!isOTPSent ? (
                 <button
                   type="submit"
-                  className="w-full py-2.5 px-4 bg-[#00d8ff] hover:bg-[#00c5eb] text-white font-bold rounded-lg transition-colors cursor-pointer text-center text-sm tracking-wider"
+                  disabled={isLoading}
+                  className={`w-full py-2.5 px-4 bg-[#00d8ff] hover:bg-[#00c5eb] text-white font-bold rounded-lg transition-colors cursor-pointer text-center text-sm tracking-wider ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
-                  Send One-Time Pin
+                  {isLoading ? 'Sending OTP...' : 'Send One-Time Pin'}
                 </button>
               ) : (
                 <button
