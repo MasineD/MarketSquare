@@ -179,28 +179,78 @@ router.post('/forgot-password', async (req, res) => {
         }
         
         let user;
+        let contactInfo;
         
         // Check if user exists with email or phone
         if (email) {
             const result = await pool.query('SELECT * FROM users.profiles WHERE email = $1', [email]);
             user = result.rows[0];
+            contactInfo = email;
         } else if (phone) {
             const result = await pool.query('SELECT * FROM users.profiles WHERE phone = $1', [phone]);
             user = result.rows[0];
+            contactInfo = phone;
         }
         
         if (!user) {
             return res.status(404).json({ message: 'No user found with the provided details' });
         }
         
+        // Optional: Invalidate any existing unused OTPs for this user
+        const invalidateQuery = `
+            UPDATE users.forgot_password 
+            SET is_used = TRUE, updated_at = CURRENT_TIMESTAMP 
+            WHERE user_id = $1 AND is_used = FALSE
+        `;
+        await pool.query(invalidateQuery, [user.id]);
+        
         // Generate a One-Time-Pin (OTP) for password reset
-        const otp = generateOTP();
-        // If email was provided, send via email. If phone was provided, send via SMS.
+        const otp = generateOTP(); // Assuming this function generates a 6-digit OTP
+        
+        // Set expiration time to 30 seconds from now
+        const expiresAt = new Date(Date.now() + 30 * 1000); // 30 seconds in milliseconds
+        
+        // Insert the new OTP record into the forgot_password table
+        const insertQuery = `
+            INSERT INTO users.forgot_password (
+                user_id, 
+                otp, 
+                contact_info, 
+                expires_at
+            ) VALUES ($1, $2, $3, $4)
+            RETURNING id, otp, expires_at
+        `;
+        
+        const insertResult = await pool.query(insertQuery, [
+            user.id, 
+            otp, 
+            contactInfo, 
+            expiresAt
+        ]);
+        
+        const resetRecord = insertResult.rows[0];
+        
+        // Determine the contact method for the response message
         const contactMethod = email ? 'email' : 'phone';
+        
+        // Send the OTP via email or SMS
+        if (email) {
+            // await sendOTPByEmail(email, otp);
+            console.log(`OTP ${otp} sent to email: ${email}`);
+            console.log(`OTP expires at: ${expiresAt}`);
+        } else if (phone) {
+            // await sendOTPBySMS(phone, otp);
+            console.log(`OTP ${otp} sent to phone: ${phone}`);
+            console.log(`OTP expires at: ${expiresAt}`);
+        }
+        
         return res.status(200).json({ 
-            message: `Password reset instructions sent to your ${contactMethod}`, 
-            otp: otp // Include the generated OTP in the response (for demonstration purposes only - in a real application, this should be sent securely via the chosen contact method)
+            message: `Password reset instructions sent to your ${contactMethod}. OTP expires in 30 seconds.`,
+            // For security, don't include OTP in response in production
+            resetId: resetRecord.id,
+            expiresAt: expiresAt // Optional: include for frontend countdown timer
         });
+        
     } catch (error) {
         console.error('Failed to initiate password reset:', error.message);
         res.status(500).json({ message: 'Failed to initiate password reset' });
